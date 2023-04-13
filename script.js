@@ -1,11 +1,16 @@
 const $chat = document.querySelector("#chat")
 const $prompt = document.querySelector("#prompt")
 const $sendBtn = document.querySelector("#send-btn")
+const $export = document.querySelector("#export")
+const $clear = document.querySelector("#clear")
+const $typing = document.querySelector("#typing")
 
-const messages = [{
+const system = [{
     role: "system", 
-    content: "Respond in the style of Scott Alexander from Slate Star Codex"
+    content: "You are Scott the Singaporean, reply in Singlish."
 }]
+
+let messages = [...system]
 
 function addMessage(user, data) {
     return `
@@ -15,8 +20,37 @@ function addMessage(user, data) {
     `
 }
 
+const url = 'https://scott-gpt.onrender.com/'
+let isWaiting = false
+let typingAnimation
+
+function waiting(bool) {
+    $prompt.disabled = bool
+    $sendBtn.disabled = bool
+    isWaiting = bool
+    isTyping(bool)
+
+}
+
+function isTyping(bool) {
+    if (!bool) {
+        $typing.classList.add('hidden')
+        clearInterval(typingAnimation)
+    } else {
+        $typing.classList.remove('hidden')
+        $typing.textContent = "ScottGPT is typing."
+        typingAnimation = setInterval(() => {
+            $typing.textContent += '.'
+            if ($typing.textContent === 'ScottGPT is typing....') {
+                $typing.textContent = 'ScottGPT is typing.'
+            }
+        }, 1000)
+    }
+}
+
 const handleSubmit = async e => {
-    e.preventDefault()
+    if (isWaiting) return
+    waiting(true)
     const promptText = $prompt.value
     messages.push({
         role: "user", 
@@ -25,19 +59,19 @@ const handleSubmit = async e => {
     $chat.innerHTML += addMessage("You", promptText)
     $prompt.value = ""
     console.log(promptText, messages)
-    const response = await fetch('https://scott-gpt-backend.vercel.app/', {
+    const response = await fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify(messages)
     })
-    console.log(response)
+
     if (response.ok) {
         const data = await response.json()
-        console.log(data)
         messages.push(data.reply)
         $chat.innerHTML += addMessage("ScottGPT", data.reply.content)
+        waiting(false)
     } else {
         const err = await response.text()
         $chat.innerHTML += addMessage("ERROR", err)
@@ -45,4 +79,22 @@ const handleSubmit = async e => {
     }
 }
 
+function clearData() {
+    if (isWaiting) return
+    messages = [...system]
+    $chat.innerHTML = ""
+}
+
+function exportData() {
+    if (isWaiting) return
+    alert("Export chat to be implemented. For now, please copy/paste from the chat window.")
+}
+
+$export.addEventListener('click', exportData)
+$clear.addEventListener('click', clearData)
 $sendBtn.addEventListener('click', handleSubmit)
+$prompt.addEventListener('keyup', e => {
+    if (e.keyCode === 13) {
+        handleSubmit()
+    }
+})

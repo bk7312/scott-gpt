@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <script defer src="/_vercel/insights/script.js"></script>
     <title>ScottGPT</title>
 </head>
 <body>
@@ -14,25 +15,30 @@
             <h2 class="header-title">ScottGPT</h2>
             <nav class="header-menu">
                 <ul>
-                    <li id="export">Export Chat</li>
-                    <li id="clear">Clear Chat</li>
+                    <li id="export" class="link hidden">Export Chat</li>
+                    <li id="clear" class="link">Clear Chat</li>
                 </ul>
             </nav>
         </div>
     </header>
     <main>
+        <div class="banner container">
+            <h3>Singlish ChatGPT On Texting Texts...</h3>
+            <p>Say hi to Scott, the Singlish ChatGPT! Currently in development...</p>
+        </div>
         <section>
             <div class="chatbox container" id="chat"></div>
         </section>
         <section>
             <div class="user-input container">
                 <textarea name="prompt" id="prompt"></textarea>
-                <button id="send-btn">Send</button>
+                <button id="send-btn" class="link">Send</button>
             </div>
+            <div id="typing" class="hidden"></div>
         </section>
     </main>
     <footer>
-        Development in progress...
+        <p>Development in progress...</p>
     </footer>
     <script src="script.js" type="module"></script>
 </body>

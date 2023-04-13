@@ -29,7 +29,8 @@ body {
 }
 
 .container, 
-.header-container {
+.header-container,
+#typing {
     max-width: 80ch;
     margin: 0 auto;
     padding: 10px;
@@ -57,6 +58,11 @@ nav ul {
 
 nav ul li {
     list-style: none;
+    padding: 0 5px;
+}
+
+.banner {
+    text-align: center;
 }
 
 .chatbox {
@@ -72,10 +78,14 @@ nav ul li {
     padding: 10px;
 }
 
+#typing {
+    padding-top: 0;
+}
+
 .user-input {
     display: flex;
     align-items: flex-end;
-    gap: 10px;
+    gap: 20px;
     justify-content: space-between;
 }
 
@@ -85,6 +95,7 @@ textarea {
     color: inherit;
     background-color: inherit;
     flex-grow: 1;
+    border: 1px solid var(--text-color);
 }
 
 #send-btn {
@@ -100,4 +111,14 @@ footer {
     margin-top: auto;
     text-align: center;
     padding: 20px;
+}
+
+.link:hover,
+.link:focus {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
 }
