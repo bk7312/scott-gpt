@@ -31,7 +31,7 @@ body {
 .container, 
 .header-container,
 #typing {
-    max-width: 80ch;
+    max-width: 70ch;
     margin: 0 auto;
     padding: 10px;
 }
@@ -69,6 +69,8 @@ nav ul li {
     border: 1px solid var(--text-color);
     border-radius: 10px;
     min-height: 300px;
+    max-height: 60vh;
+    overflow-y: scroll;
     height: 100%;
     width: 95%;
     margin: 10px auto;

@@ -1,13 +1,13 @@
 const $chat = document.querySelector("#chat")
 const $prompt = document.querySelector("#prompt")
 const $sendBtn = document.querySelector("#send-btn")
-const $export = document.querySelector("#export")
-const $clear = document.querySelector("#clear")
 const $typing = document.querySelector("#typing")
+const $clear = document.querySelector("#clear")
+// const $export = document.querySelector("#export")
 
 const system = [{
     role: "system", 
-    content: "You are Scott the Singaporean, reply in Singlish."
+    content: "You are Scott, a Singaporean, reply in Singlish. If you don't know how to respond, make a joke about it."
 }]
 
 let messages = [...system]
@@ -58,7 +58,6 @@ const handleSubmit = async e => {
     })
     $chat.innerHTML += addMessage("You", promptText)
     $prompt.value = ""
-    console.log(promptText, messages)
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -85,12 +84,12 @@ function clearData() {
     $chat.innerHTML = ""
 }
 
-function exportData() {
-    if (isWaiting) return
-    alert("Export chat to be implemented. For now, please copy/paste from the chat window.")
-}
+// function exportData() {
+//     if (isWaiting) return
+//     alert("Export chat to be implemented.")
+// }
 
-$export.addEventListener('click', exportData)
+// $export.addEventListener('click', exportData)
 $clear.addEventListener('click', clearData)
 $sendBtn.addEventListener('click', handleSubmit)
 $prompt.addEventListener('keyup', e => {
