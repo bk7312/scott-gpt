@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>ScottGPT</title>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <img class="header-logo" src="logo.png">
+            <h2 class="header-title">ScottGPT</h2>
+            <nav class="header-menu">
+                <ul>
+                    <li id="export">Export Chat</li>
+                    <li id="clear">Clear Chat</li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section>
+            <div class="chatbox container" id="chat"></div>
+        </section>
+        <section>
+            <div class="user-input container">
+                <textarea name="prompt" id="prompt"></textarea>
+                <button id="send-btn">Send</button>
+            </div>
+        </section>
+    </main>
+    <footer>
+        Development in progress...
+    </footer>
+    <script src="script.js" type="module"></script>
+</body>
+</html>
