@@ -15,26 +15,24 @@
             <h2 class="header-title">ScottGPT</h2>
             <nav class="header-menu">
                 <ul>
-                    <!-- <li id="export" class="link hidden">Export Chat</li> -->
                     <li id="clear" class="link">Clear Chat</li>
                 </ul>
             </nav>
         </div>
     </header>
     <main>
-        <div class="banner container">
-            <h3>Singlish ChatGPT Or Terrible Texter?</h3>
+        <section class="banner container">
+            <h3>Singlish ChatGPT Online Talking Technology</h3>
             <p>Say hi to SCOTT, the Singlish ChatGPT!</p>
+        </section>
+        <div class="chatbox container" id="chat">
         </div>
         <section>
-            <div class="chatbox container" id="chat"></div>
-        </section>
-        <section>
             <div class="user-input container">
-                <textarea name="prompt" id="prompt"></textarea>
+                <textarea rows="2" name="prompt" id="prompt" autofocus></textarea>
                 <button id="send-btn" class="link">Send</button>
+                <div id="typing"></div>
             </div>
-            <div id="typing" class="hidden"></div>
         </section>
     </main>
     <footer>

@@ -13,11 +13,12 @@ const system = [{
 let messages = [...system]
 
 function addMessage(user, data) {
-    return `
+    $chat.innerHTML +=  `
         <div class="chat-text">
             <p>${user}: ${data}</p>    
         </div>
     `
+    $chat.scrollTop = $chat.scrollHeight - $chat.clientHeight
 }
 
 const url = 'https://scott-gpt.onrender.com/'
@@ -34,17 +35,16 @@ function waiting(bool) {
 
 function isTyping(bool) {
     if (!bool) {
-        $typing.classList.add('hidden')
+        $typing.textContent = ""
         clearInterval(typingAnimation)
     } else {
-        $typing.classList.remove('hidden')
         $typing.textContent = "ScottGPT is typing."
         typingAnimation = setInterval(() => {
             $typing.textContent += '.'
             if ($typing.textContent === 'ScottGPT is typing....') {
                 $typing.textContent = 'ScottGPT is typing.'
             }
-        }, 1000)
+        }, 800)
     }
 }
 
@@ -56,7 +56,7 @@ const handleSubmit = async e => {
         role: "user", 
         content: promptText
     })
-    $chat.innerHTML += addMessage("You", promptText)
+    addMessage("You", promptText)
     $prompt.value = ""
     const response = await fetch(url, {
         method: 'POST',
@@ -69,12 +69,13 @@ const handleSubmit = async e => {
     if (response.ok) {
         const data = await response.json()
         messages.push(data.reply)
-        $chat.innerHTML += addMessage("ScottGPT", data.reply.content)
+        addMessage("ScottGPT", data.reply.content)
         waiting(false)
+        $prompt.focus({ preventScroll: true })
     } else {
         const err = await response.text()
-        $chat.innerHTML += addMessage("ERROR", err)
-        alert(err)
+        addMessage("ERROR", err)
+        addMessage("SYSTEM", `Please refresh page.`)
     }
 }
 

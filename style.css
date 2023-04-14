@@ -65,14 +65,19 @@ nav ul li {
     text-align: center;
 }
 
+.banner h3 {
+    margin-bottom: 5px;
+}
+
 .chatbox {
     border: 1px solid var(--text-color);
     border-radius: 10px;
     min-height: 300px;
-    max-height: 60vh;
-    overflow-y: scroll;
+    max-height: 50vh;
+    overflow-y: auto;
     height: 100%;
     width: 95%;
+    max-width: 67.5ch;
     margin: 10px auto;
 }
 
@@ -81,14 +86,18 @@ nav ul li {
 }
 
 #typing {
-    padding-top: 0;
+    position: absolute;
+    top: -18px;
+    left: 10px;
+    font-size: small;
 }
 
 .user-input {
     display: flex;
-    align-items: flex-end;
-    gap: 20px;
+    align-items: center;
+    gap: 10px;
     justify-content: space-between;
+    position: relative;
 }
 
 textarea {
@@ -98,6 +107,7 @@ textarea {
     background-color: inherit;
     flex-grow: 1;
     border: 1px solid var(--text-color);
+    resize: none;
 }
 
 #send-btn {
@@ -119,8 +129,4 @@ footer {
 .link:focus {
     transform: scale(1.1);
     cursor: pointer;
-}
-
-.hidden {
-    display: none;
 }
