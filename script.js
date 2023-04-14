@@ -30,7 +30,6 @@ function waiting(bool) {
     $sendBtn.disabled = bool
     isWaiting = bool
     isTyping(bool)
-
 }
 
 function isTyping(bool) {
@@ -58,24 +57,30 @@ const handleSubmit = async e => {
     })
     addMessage("You", promptText)
     $prompt.value = ""
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(messages)
-    })
 
-    if (response.ok) {
-        const data = await response.json()
-        messages.push(data.reply)
-        addMessage("ScottGPT", data.reply.content)
-        waiting(false)
-        $prompt.focus({ preventScroll: true })
-    } else {
-        const err = await response.text()
-        addMessage("ERROR", err)
-        addMessage("SYSTEM", `Please refresh page.`)
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(messages)
+        })
+        
+        if (response.ok) {
+            const data = await response.json()
+            messages.push(data.reply)
+            addMessage("ScottGPT", data.reply.content)
+            waiting(false)
+            $prompt.focus({ preventScroll: true })
+        } else {
+            const err = await response.text()
+            addMessage("ERROR", err)
+            addMessage("SYSTEM", `Please try again later.`)
+        }
+    } catch (error) {
+        addMessage("ERROR", error)
+        addMessage("SYSTEM", `Please try again later.`)
     }
 }
 
@@ -85,12 +90,6 @@ function clearData() {
     $chat.innerHTML = ""
 }
 
-// function exportData() {
-//     if (isWaiting) return
-//     alert("Export chat to be implemented.")
-// }
-
-// $export.addEventListener('click', exportData)
 $clear.addEventListener('click', clearData)
 $sendBtn.addEventListener('click', handleSubmit)
 $prompt.addEventListener('keyup', e => {
