@@ -3,7 +3,7 @@ const $prompt = document.querySelector("#prompt")
 const $sendBtn = document.querySelector("#send-btn")
 const $typing = document.querySelector("#typing")
 const $clear = document.querySelector("#clear")
-// const $export = document.querySelector("#export")
+const $blockModal = document.querySelector("#block-modal")
 
 const system = [{
     role: "system", 
@@ -24,6 +24,11 @@ function addMessage(user, data) {
 const url = 'https://scott-gpt.onrender.com/'
 let isWaiting = false
 let typingAnimation
+
+// JS for disabling ScottGPT
+setTimeout(() => $blockModal.showModal(), 1000)
+$prompt.disabled = true
+$sendBtn.disabled = true
 
 function waiting(bool) {
     $prompt.disabled = bool
@@ -75,12 +80,10 @@ const handleSubmit = async e => {
             $prompt.focus({ preventScroll: true })
         } else {
             const err = await response.text()
-            addMessage("ERROR", err)
-            addMessage("SYSTEM", `Please try again later.`)
+            throw new Error(err)
         }
     } catch (error) {
-        addMessage("ERROR", error)
-        addMessage("SYSTEM", `Please try again later.`)
+        addMessage("SYSTEM", error)
     }
 }
 
