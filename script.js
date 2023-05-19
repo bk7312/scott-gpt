@@ -25,10 +25,10 @@ const url = 'https://scott-gpt.onrender.com/'
 let isWaiting = false
 let typingAnimation
 
-// JS for disabling ScottGPT
-setTimeout(() => $blockModal.showModal(), 1000)
-$prompt.disabled = true
-$sendBtn.disabled = true
+// // JS for disabling ScottGPT
+// setTimeout(() => $blockModal.showModal(), 1000)
+// $prompt.disabled = true
+// $sendBtn.disabled = true
 
 function waiting(bool) {
     $prompt.disabled = bool
