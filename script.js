@@ -21,7 +21,6 @@ function addMessage(user, data) {
     $chat.scrollTop = $chat.scrollHeight - $chat.clientHeight
 }
 
-// const url = 'https://scott-gpt.onrender.com/'
 let isWaiting = false
 let typingAnimation
 

@@ -15,11 +15,12 @@ export default async function handler(req, res) {
             model,
             messages
         })
+        console.log("response:", response)
         return res.status(200).json({
             reply: response.data.choices[0].message
         })
     } catch (error) {
-        console.log(error)
+        console.log("error:", error)
         return res.status(500).json("Something went wrong...")
     }
 }
