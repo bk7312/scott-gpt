@@ -1,0 +1,8 @@
+{
+    "functions": {
+      "api/openai.js": {
+        "memory": 1024,
+        "maxDuration": 60
+      }
+    }
+  }

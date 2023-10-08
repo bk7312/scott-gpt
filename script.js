@@ -6,14 +6,14 @@ const $clear = document.querySelector("#clear")
 const $blockModal = document.querySelector("#block-modal")
 
 const system = [{
-    role: "system", 
+    role: "system",
     content: "You are Scott, a Singaporean, reply in Singlish. If you don't know how to respond, make a joke about it."
 }]
 
 let messages = [...system]
 
 function addMessage(user, data) {
-    $chat.innerHTML +=  `
+    $chat.innerHTML += `
         <div class="chat-text">
             <p>${user}: ${data}</p>    
         </div>
@@ -21,7 +21,7 @@ function addMessage(user, data) {
     $chat.scrollTop = $chat.scrollHeight - $chat.clientHeight
 }
 
-const url = 'https://scott-gpt.onrender.com/'
+// const url = 'https://scott-gpt.onrender.com/'
 let isWaiting = false
 let typingAnimation
 
@@ -57,21 +57,21 @@ const handleSubmit = async e => {
     waiting(true)
     const promptText = $prompt.value
     messages.push({
-        role: "user", 
+        role: "user",
         content: promptText
     })
     addMessage("You", promptText)
     $prompt.value = ""
 
     try {
-        const response = await fetch(url, {
+        const response = await fetch('/api/openai', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(messages)
         })
-        
+
         if (response.ok) {
             const data = await response.json()
             messages.push(data.reply)
