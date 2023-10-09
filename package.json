@@ -13,6 +13,6 @@
   "dependencies": {
     "ai": "^2.2.14",
     "dotenv": "^16.0.3",
-    "openai": "^3.3.0"
+    "openai": "^4.11.1"
   }
 }
