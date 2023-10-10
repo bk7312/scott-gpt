@@ -1,5 +1,5 @@
 import { OpenAI } from 'openai'
-// import { OpenAIStream, StreamingTextResponse } from 'ai'
+import { OpenAIStream, StreamingTextResponse } from 'ai'
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
@@ -9,36 +9,22 @@ export const config = {
 
 export default async function handler(req) {
     if (req.method === 'GET') {
-        return new Response.redirect(window.location.origin)
+        return Response.redirect(`http://${req.headers.get('host')}`)
     }
-    console.log('test', { req })
 
     try {
         const body = await req.json()
-
         const response = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
-            // stream: true,
+            stream: true,
             messages: body,
         })
-        console.log("stream-response:", response)
+        const stream = OpenAIStream(response)
+        return new StreamingTextResponse(stream)
 
-        // // Convert the response into a friendly text-stream
-        // const stream = OpenAIStream(response)
-        // console.log(stream)
-        // // Respond with the stream
-        // return new StreamingTextResponse(stream)
-
-        const reply = JSON.stringify(response.choices[0].message)
-
-        return new Response(reply, { status: 200 })
-        // return res.status(200).json({
-        //     reply: response.choices[0].message
-        // })
     } catch (error) {
         console.log("error:", error)
         return new Response('Something went wrong...', { status: 500 })
-        // return res.status(500).json("Something went wrong...")
     }
 }
 

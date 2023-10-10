@@ -70,27 +70,29 @@ const handleSubmit = async e => {
             },
             body: JSON.stringify(messages)
         })
-        console.log('fetchresp', response)
 
         if (!response.ok) {
             const err = await response.text()
             throw new Error(err)
         }
 
-        // const reader = response.body.getReader()
-        // const decoder = new TextDecoder('utf-8')
-        // let reply = ''
-        // while (true) {
-        //     const { value, done } = await reader.read()
-        //     if (done) break
-        //     const decodedValue = decoder.decode(value)
-        //     console.log({ value, decodedValue })
-        //     reply += decodedValue
-        // }
-        const reply = await response.json()
-        console.log(reply)
-        messages.push(reply)
-        addMessage("ScottGPT", reply.content)
+        const reader = response.body.getReader()
+        const decoder = new TextDecoder('utf-8')
+        let reply = ''
+        while (true) {
+            const { value, done } = await reader.read()
+            if (done) break
+            reply += decoder.decode(value)
+        }
+
+        messages.push({ role: 'assistant', content: reply })
+        addMessage("ScottGPT", reply)
+
+        // for block reply instead of streaming
+        // const reply = await response.json()
+        // messages.push(reply)
+        // addMessage("ScottGPT", reply.content)
+
         waiting(false)
         $prompt.focus({ preventScroll: true })
 
