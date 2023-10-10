@@ -5,22 +5,7 @@ const $typing = document.querySelector("#typing")
 const $clear = document.querySelector("#clear")
 const $blockModal = document.querySelector("#block-modal")
 
-const system = [{
-    role: "system",
-    content: "You are Scott, a Singaporean, reply in Singlish. If you don't know how to respond, make a joke about it."
-}]
-
-let messages = [...system]
-
-function addMessage(user, data) {
-    $chat.innerHTML += `
-        <div class="chat-text">
-            <p>${user}: ${data}</p>    
-        </div>
-    `
-    $chat.scrollTop = $chat.scrollHeight - $chat.clientHeight
-}
-
+let messages = []
 let isWaiting = false
 let typingAnimation
 
@@ -29,37 +14,35 @@ let typingAnimation
 // $prompt.disabled = true
 // $sendBtn.disabled = true
 
+function addMessage(user, data = '', id = `m-${messages.length}`) {
+    $chat.innerHTML += `
+        <div class="chat-text">
+            <p id=${id}>${user}: ${data}</p>    
+        </div>
+    `
+    $chat.scrollTop = $chat.scrollHeight - $chat.clientHeight
+}
+
+function addStreamingMessage(html, text) {
+    html.textContent += text
+    $chat.scrollTop = $chat.scrollHeight - $chat.clientHeight
+}
+
 function waiting(bool) {
     $prompt.disabled = bool
     $sendBtn.disabled = bool
     isWaiting = bool
-    isTyping(bool)
-}
-
-function isTyping(bool) {
-    if (!bool) {
-        $typing.textContent = ""
-        clearInterval(typingAnimation)
-    } else {
-        $typing.textContent = "ScottGPT is typing."
-        typingAnimation = setInterval(() => {
-            $typing.textContent += '.'
-            if ($typing.textContent === 'ScottGPT is typing....') {
-                $typing.textContent = 'ScottGPT is typing.'
-            }
-        }, 800)
-    }
 }
 
 const handleSubmit = async e => {
     if (isWaiting) return
     waiting(true)
     const promptText = $prompt.value
+    addMessage("You", promptText)
     messages.push({
         role: "user",
         content: promptText
     })
-    addMessage("You", promptText)
     $prompt.value = ""
 
     try {
@@ -79,19 +62,21 @@ const handleSubmit = async e => {
         const reader = response.body.getReader()
         const decoder = new TextDecoder('utf-8')
         let reply = ''
+        addMessage("ScottGPT")
+        const $id = document.querySelector(`#m-${messages.length}`)
         while (true) {
             const { value, done } = await reader.read()
             if (done) break
-            reply += decoder.decode(value)
+            const decodedValue = decoder.decode(value)
+            reply += decodedValue
+            addStreamingMessage($id, decodedValue)
         }
-
         messages.push({ role: 'assistant', content: reply })
-        addMessage("ScottGPT", reply)
 
         // for block reply instead of streaming
         // const reply = await response.json()
-        // messages.push(reply)
         // addMessage("ScottGPT", reply.content)
+        // messages.push(reply)
 
         waiting(false)
         $prompt.focus({ preventScroll: true })
@@ -103,7 +88,7 @@ const handleSubmit = async e => {
 
 function clearData() {
     if (isWaiting) return
-    messages = [...system]
+    messages = []
     $chat.innerHTML = ""
 }
 

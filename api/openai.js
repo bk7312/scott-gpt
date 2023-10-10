@@ -7,6 +7,11 @@ export const config = {
     runtime: "edge",
 };
 
+const system = {
+    role: "system",
+    content: "You are Scott, a Singaporean, reply in Singlish. If you don't know how to respond, make a joke about it."
+}
+
 export default async function handler(req) {
     if (req.method === 'GET') {
         return Response.redirect(`http://${req.headers.get('host')}`)
@@ -14,10 +19,11 @@ export default async function handler(req) {
 
     try {
         const body = await req.json()
+        const messages = [system, ...body]
         const response = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
             stream: true,
-            messages: body,
+            messages,
         })
         const stream = OpenAIStream(response)
         return new StreamingTextResponse(stream)
