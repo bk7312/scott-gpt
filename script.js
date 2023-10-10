@@ -6,14 +6,14 @@ const $clear = document.querySelector("#clear")
 const $blockModal = document.querySelector("#block-modal")
 
 const system = [{
-    role: "system", 
+    role: "system",
     content: "You are Scott, a Singaporean, reply in Singlish. If you don't know how to respond, make a joke about it."
 }]
 
 let messages = [...system]
 
 function addMessage(user, data) {
-    $chat.innerHTML +=  `
+    $chat.innerHTML += `
         <div class="chat-text">
             <p>${user}: ${data}</p>    
         </div>
@@ -21,7 +21,6 @@ function addMessage(user, data) {
     $chat.scrollTop = $chat.scrollHeight - $chat.clientHeight
 }
 
-const url = 'https://scott-gpt.onrender.com/'
 let isWaiting = false
 let typingAnimation
 
@@ -57,31 +56,46 @@ const handleSubmit = async e => {
     waiting(true)
     const promptText = $prompt.value
     messages.push({
-        role: "user", 
+        role: "user",
         content: promptText
     })
     addMessage("You", promptText)
     $prompt.value = ""
 
     try {
-        const response = await fetch(url, {
+        const response = await fetch('/api/openai', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(messages)
         })
-        
-        if (response.ok) {
-            const data = await response.json()
-            messages.push(data.reply)
-            addMessage("ScottGPT", data.reply.content)
-            waiting(false)
-            $prompt.focus({ preventScroll: true })
-        } else {
+
+        if (!response.ok) {
             const err = await response.text()
             throw new Error(err)
         }
+
+        const reader = response.body.getReader()
+        const decoder = new TextDecoder('utf-8')
+        let reply = ''
+        while (true) {
+            const { value, done } = await reader.read()
+            if (done) break
+            reply += decoder.decode(value)
+        }
+
+        messages.push({ role: 'assistant', content: reply })
+        addMessage("ScottGPT", reply)
+
+        // for block reply instead of streaming
+        // const reply = await response.json()
+        // messages.push(reply)
+        // addMessage("ScottGPT", reply.content)
+
+        waiting(false)
+        $prompt.focus({ preventScroll: true })
+
     } catch (error) {
         addMessage("SYSTEM", error)
     }
